@@ -24,11 +24,11 @@ const verifyEmail = async (req, res) => {
   const { token } = req.query;
   if (typeof token === "string") {
     try {
-      console.log(token, "token");
+      // console.log(token, "token");
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log(decoded, "><><>");
+      // console.log(decoded, "><><>");
       const decodedName = decoded.name;
-      console.log(decodedName, "<><>>");
+      // console.log(decodedName, "<><>>");
 
       if (decodedName === "VERIFICATION") {
         await User.update({ active: true }, { where: { id: decoded.id } });

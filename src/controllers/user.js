@@ -55,7 +55,7 @@ const Register = async (req, res) => {
 const Login = async (req, res) => {
   try {
     const { input, password } = req.body;
-    console.log(input, "><><>");
+    // console.log(input, "><><>");
     const { value, error } = loginSchema.validate({ input, password });
     const user = await User.findOne({
       attributes: ["id", "userName", "active", "email", "password", "isAdmin"],
@@ -70,7 +70,7 @@ const Login = async (req, res) => {
         message: error.details[0].message,
       });
     }
-    console.log(user, "user login");
+    // console.log(user, "user login");
     const loginToken = generateToken(user.id, user.email, "LOGIN", "1d");
 
     if (!user) {
@@ -194,7 +194,7 @@ const logout = async (req, res) => {
 const resetPassword = async (req, res) => {
   try {
     const { newPassword } = req.body;
-    const token = req.cookies.__token;
+    const token = req.cookies.token;
 
     const { error } = resetPasswordSchema.validate({ newPassword });
     if (error) {
@@ -268,23 +268,20 @@ const resetPasswordd = async (req, res) => {
   try {
     const { newPassword } = req.body;
     const { token } = req.query;
-    console.log(token, "token");
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(decoded, ">><decoded");
+    // console.log(decoded, ">><decoded");
     const { value, error } = resetPasswordSchema.validate({ newPassword });
     if (error) {
       return responseStatusMsg(res, 400, error.details[0].message, "error");
     }
     const hashedPassword = await bcrypt.hash(value.newPassword, 10);
-    console.log(hashedPassword, "><><");
 
     const user = await User.update(
       { password: hashedPassword },
       { where: { email: decoded.email } }
     );
 
-    console.log(user, "><><user");
     return res.json({ message: "Password reset successful!" });
   } catch (error) {
     return responseStatusMsg(res, 500, error?.message, "error", null, error);

@@ -30,10 +30,6 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api", routes);
-// app.use((req, res, next) => {
-//   console.log("Cookies:", req.cookies);
-//   next();
-// });
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
