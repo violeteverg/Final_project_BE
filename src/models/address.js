@@ -1,22 +1,18 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class User extends Model {
+  class Address extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      User.hasMany(models.Cart, { foreignKey: "userId" });
-      User.hasMany(models.Wishlist, { foreignKey: "userId" });
-      User.hasMany(models.Review, { foreignKey: "userId" });
-      User.hasMany(models.Order, { foreignKey: "userId" });
-      User.hasMany(models.Address, { foreignKey: "userId" });
       // define association here
+      Address.belongsTo(models.User, { foreignKey: "userId" });
     }
   }
-  User.init(
+  Address.init(
     {
       id: {
         allowNull: false,
@@ -24,42 +20,40 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         type: DataTypes.INTEGER,
       },
-      fullName: {
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      fullAddress: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      userName: {
+      city: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
       },
-      avatar: {
+      state: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      postalCode: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      country: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      isPrimary: {
+        type: DataTypes.BOOLEAN,
         allowNull: true,
-      },
-      active: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      isAdmin: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "User",
-      tableName: "users",
+      modelName: "Address",
+      tableName: "addresses",
     }
   );
-  return User;
+  return Address;
 };
