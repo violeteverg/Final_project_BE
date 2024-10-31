@@ -1,6 +1,6 @@
 const { Op } = require("sequelize");
 const responseStatusMsg = require("../helper/responseMessage");
-const { Product, Category } = require("../models");
+const { Product, Category, Review, User } = require("../models");
 
 const productSchema = require("../schemas/productSchema");
 const { uploadImage } = require("../services/cloudinaryService");
@@ -62,11 +62,13 @@ const findAllProduct = async (req, res) => {
 
     const products = await Product.findAll({
       where: whereCondition,
+      attributes: ["id", "image", "title", "description", "price", "quantity"],
       include: [
         {
           model: Category,
           where: categoryName ? { categoryName: categoryName } : undefined,
           required: !!categoryName,
+          attributes: ["categoryName"],
         },
       ],
       order: [["id", "ASC"]],
@@ -95,7 +97,22 @@ const findAllProduct = async (req, res) => {
 const findProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const products = await Product.findOne({ where: { id: id } });
+    const products = await Product.findOne({
+      where: { id: id },
+      attributes: ["id", "image", "title", "description", "price", "quantity"],
+      include: [
+        {
+          model: Review,
+          attributes: ["id", "rating", "comment"],
+          include: [
+            {
+              model: User,
+              attributes: ["fullName", "avatar"],
+            },
+          ],
+        },
+      ],
+    });
     if (!products) {
       return responseStatusMsg(res, 404, `product with id${id} not found`);
     }
