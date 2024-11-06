@@ -4,18 +4,39 @@ const createCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;
     const userId = req.body.userId;
+    console.log(req.body, "ini quantity");
+
     if (!productId || !quantity) {
       return res
         .status(400)
         .json({ message: "Product ID and quantity are required" });
     }
+    const product = await Product.findByPk(productId, {
+      attributes: ["quantity"],
+    });
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
 
+    if (quantity > product.quantity) {
+      return res.status(400).json({
+        message: `Requested quantity exceeds available stock. Available stock: ${product.quantity}`,
+      });
+    }
     const existingCartItem = await Cart.findOne({
       where: { userId, productId },
     });
 
     if (existingCartItem) {
-      existingCartItem.quantity += quantity;
+      const newQuantity = existingCartItem.quantity + quantity;
+
+      if (newQuantity > product.quantity) {
+        return res.status(400).json({
+          message: `Adding this quantity exceeds available stock. Available stock: ${product.quantity}`,
+        });
+      }
+
+      existingCartItem.quantity = newQuantity;
       await existingCartItem.save();
       return res.status(200).json({
         message: "Quantity updated in cart",
@@ -25,13 +46,14 @@ const createCart = async (req, res) => {
       const newCartItem = await Cart.create({ userId, productId, quantity });
       return res
         .status(201)
-        .json({ message: "Item add to cart", cartItem: newCartItem });
+        .json({ message: "Item added to cart", cartItem: newCartItem });
     }
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "failed to create cart item" });
+    res.status(500).json({ message: "Failed to create cart item" });
   }
 };
+
 const findAllCart = async (req, res) => {
   try {
     const userId = req.body.userId;
@@ -40,7 +62,7 @@ const findAllCart = async (req, res) => {
       include: [
         {
           model: Product,
-          attributes: ["title", "price", "description"],
+          attributes: ["title", "price", "description", "image"],
         },
       ],
     });
@@ -61,6 +83,9 @@ const updateCart = async (req, res) => {
   try {
     const { id } = req.params;
     const { quantity } = req.body;
+    console.log(id, "ini params");
+    console.log(req.body, "ini quantity");
+
     const userId = req.body.userId;
     const cart = await Cart.findOne({ where: { id, userId } });
 

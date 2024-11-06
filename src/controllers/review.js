@@ -3,7 +3,8 @@ const { Review, Product, User } = require("../models");
 
 const createReview = async (req, res) => {
   try {
-    const { comment, rating, productId } = req.body;
+    const { id: productId } = req.params;
+    const { comment, rating } = req.body;
     const userId = req.body.userId;
 
     const reviews = await Review.create({ userId, productId, comment, rating });

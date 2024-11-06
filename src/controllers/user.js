@@ -71,7 +71,12 @@ const Login = async (req, res) => {
       });
     }
     // console.log(user, "user login");
-    const loginToken = generateToken(user.id, user.email, "LOGIN", "1d");
+    const loginToken = generateToken(
+      user.id,
+      { email: user.email, userName: user.userName },
+      "LOGIN",
+      "1d"
+    );
 
     if (!user) {
       return responseStatusMsg(res, 400, "User is not found", "error");
@@ -157,7 +162,7 @@ const adminLogin = async (req, res) => {
 
     const loginToken = generateToken(user.id, user.email, "ADMIN", "1d");
 
-    res.cookie("token", loginToken, {
+    res.cookie("_lgnTkn", loginToken, {
       // httpOnly: true,
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,

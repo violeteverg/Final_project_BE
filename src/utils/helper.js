@@ -5,11 +5,11 @@ const Handlebars = require("handlebars");
 const nodemailer = require("nodemailer");
 const { User } = require("../models");
 
-const generateToken = (id, email, name, expires) => {
+const generateToken = (id, userValue, name, expires) => {
   const token = jwt.sign(
     {
       id,
-      email,
+      userValue,
       name,
     },
     process.env.JWT_SECRET,

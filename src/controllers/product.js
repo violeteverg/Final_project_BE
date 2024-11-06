@@ -4,6 +4,7 @@ const { Product, Category, Review, User } = require("../models");
 
 const productSchema = require("../schemas/productSchema");
 const { uploadImage } = require("../services/cloudinaryService");
+const paginate = require("../utils/pagination");
 
 const createProduct = async (req, res) => {
   try {
@@ -50,7 +51,7 @@ const createProduct = async (req, res) => {
 
 const findAllProduct = async (req, res) => {
   try {
-    const { search, categoryName } = req.query;
+    const { search, categoryName, page = 1, limit = 10 } = req.query;
     const whereCondition = {
       ...(search && {
         [Op.or]: [
@@ -62,7 +63,15 @@ const findAllProduct = async (req, res) => {
 
     const products = await Product.findAll({
       where: whereCondition,
-      attributes: ["id", "image", "title", "description", "price", "quantity"],
+      attributes: [
+        "id",
+        "image",
+        "title",
+        "description",
+        "price",
+        "quantity",
+        "isActive",
+      ],
       include: [
         {
           model: Category,
@@ -73,13 +82,14 @@ const findAllProduct = async (req, res) => {
       ],
       order: [["id", "ASC"]],
     });
+    const { data, pagination } = paginate(products, +page, +limit);
 
     return responseStatusMsg(
       res,
       200,
       "Products retrieved successfully",
       "success_data",
-      products
+      { data, pagination }
     );
   } catch (error) {
     console.log(error, "error retrieving products");

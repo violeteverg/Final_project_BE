@@ -10,7 +10,7 @@ const {
 const cartRouter = Router();
 cartRouter.post("/create", getUserId, createCart);
 cartRouter.get("/findAll", getUserId, findAllCart);
-cartRouter.put("/update/:id", getUserId, updateCart);
+cartRouter.post("/update/:id", getUserId, updateCart);
 cartRouter.delete("/delete/:id", getUserId, removeCart);
 
 module.exports = cartRouter;
