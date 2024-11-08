@@ -5,6 +5,7 @@ const cartRouter = require("./cart");
 const wishlistRouter = require("./wishlist");
 const reviewRouter = require("./review");
 const addressRouter = require("./adress");
+const orderRouter = require("./order");
 
 const routes = Router();
 
@@ -14,6 +15,7 @@ routes.use("/cart", cartRouter);
 routes.use("/wishlist", wishlistRouter);
 routes.use("/review", reviewRouter);
 routes.use("/address", addressRouter);
+routes.use("/order", orderRouter);
 
 module.exports = {
   routes,

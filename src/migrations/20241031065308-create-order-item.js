@@ -16,6 +16,11 @@ module.exports = {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
+      isBuyNow: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
       orderProduct: {
         type: Sequelize.JSON,
         allowNull: false,

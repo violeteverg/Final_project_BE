@@ -24,6 +24,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      isBuyNow: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
       orderProduct: {
         type: DataTypes.JSON,
         allowNull: false,

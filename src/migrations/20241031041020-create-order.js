@@ -16,7 +16,11 @@ module.exports = {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
-      adressName: {
+      addressName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      orderId: {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -29,7 +33,7 @@ module.exports = {
         allowNull: false,
       },
       paymentId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       paymentStatus: {
@@ -39,6 +43,10 @@ module.exports = {
       totalAmount: {
         type: Sequelize.INTEGER,
         allowNull: false,
+      },
+      vaNumber: {
+        type: Sequelize.JSON,
+        allowNull: true,
       },
       createdAt: {
         allowNull: false,

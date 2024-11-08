@@ -29,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      orderId: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       orderDate: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -38,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       },
       paymentId: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       paymentStatus: {
@@ -48,6 +52,10 @@ module.exports = (sequelize, DataTypes) => {
       totalAmount: {
         type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      vaNumber: {
+        type: DataTypes.JSON,
+        allowNull: true,
       },
     },
     {
