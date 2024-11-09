@@ -3,7 +3,7 @@ const {
   verifyTransaction,
 } = require("../services/midtransService");
 const generateRandomString = require("../utils/generateRandomString");
-const { Order, OrderItem } = require("../models");
+const { Order, OrderItem, Product } = require("../models");
 const verifySignatureKey = require("../utils/verifySignatureKey");
 const updateOrderStatus = require("../services/updateOrder");
 
@@ -34,9 +34,7 @@ const createOrder = async (req, res) => {
       },
     };
     const transactionDetails = await createTransaction(parameter);
-    console.log(transactionDetails, "ini transations dtail");
-    // const token = transactionDetails?.token?.substring(0, 50);
-    // console.log(token);
+
     const order = await Order.create({
       userId,
       addressName: addressName,
@@ -108,7 +106,9 @@ const paymentCallback = async (req, res) => {
 // };
 const getAllProduct = async (req, res) => {
   try {
+    const userId = req.body.userId;
     const order = await Order.findAll({
+      where: { userId: userId },
       include: [
         {
           model: OrderItem,
@@ -124,4 +124,76 @@ const getAllProduct = async (req, res) => {
   }
 };
 
-module.exports = { createOrder, paymentCallback, getAllProduct };
+const getProductByOrderDetailId = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const order = await Order.findOne({
+      where: { id },
+      attributes: [
+        "id",
+        "userId",
+        "orderId",
+        "orderDate",
+        "orderStatus",
+        "paymentId",
+      ],
+      include: [
+        {
+          model: OrderItem,
+          attributes: ["orderProduct"],
+        },
+      ],
+    });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    const orderProductQuantity = order.OrderItem.orderProduct.reduce(
+      (acc, item) => {
+        acc[item.productId] = item.quantity;
+        return acc;
+      },
+      {}
+    );
+
+    const products = await Product.findAll({
+      where: { id: Object.keys(orderProductQuantity) },
+      attributes: [
+        "id",
+        "categoryId",
+        "discountId",
+        "image",
+        "title",
+        "description",
+        "price",
+        "quantity",
+        "isActive",
+        "createdAt",
+        "updatedAt",
+      ],
+    });
+
+    products.forEach((product) => {
+      product.quantity = orderProductQuantity[product.id] || product.quantity;
+    });
+
+    const responseData = {
+      ...order.toJSON(),
+      products,
+    };
+    delete responseData.OrderItem;
+    return res.status(200).json({ message: "success", data: responseData });
+  } catch (error) {
+    console.error("Error in getProductByOrderDetailId:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports = {
+  createOrder,
+  paymentCallback,
+  getAllProduct,
+  getProductByOrderDetailId,
+};
