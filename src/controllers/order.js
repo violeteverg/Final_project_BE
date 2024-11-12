@@ -1,11 +1,13 @@
 const {
   createTransaction,
   verifyTransaction,
+  cancelTransaction,
 } = require("../services/midtransService");
 const generateRandomString = require("../utils/generateRandomString");
 const { Order, OrderItem, Product } = require("../models");
 const verifySignatureKey = require("../utils/verifySignatureKey");
 const updateOrderStatus = require("../services/updateOrder");
+const { Op } = require("sequelize");
 
 // create & read
 const createOrder = async (req, res) => {
@@ -27,13 +29,23 @@ const createOrder = async (req, res) => {
         secure: true,
       },
       callbacks: {
-        finish: "http://localhost:5173/all-product",
-        unfinish: "https://plants-ecommerce.vercel.app/product",
+        finish: "http://localhost:5173/order-list",
+        unfinish: "http://localhost:5173/order-list",
         error: "https://plants-ecommerce.vercel.app/pots",
-        cancel: "https://plants-ecommerce.vercel.app/succulents",
+        cancel: "http://localhost:5173/order-list",
       },
     };
     const transactionDetails = await createTransaction(parameter);
+    console.log(transactionDetails, "ini transaction detail");
+
+    await Order.destroy({
+      where: {
+        userId,
+        vaNumber: {
+          [Op.eq]: null,
+        },
+      },
+    });
 
     const order = await Order.create({
       userId,
@@ -108,7 +120,13 @@ const getAllProduct = async (req, res) => {
   try {
     const userId = req.body.userId;
     const order = await Order.findAll({
-      where: { userId: userId },
+      where: {
+        userId: userId,
+        vaNumber: {
+          [Op.ne]: null,
+        },
+      },
+      order: [["createdAt", "DESC"]],
       include: [
         {
           model: OrderItem,
@@ -191,9 +209,26 @@ const getProductByOrderDetailId = async (req, res) => {
   }
 };
 
+const cancelOrder = async (req, res) => {
+  try {
+    const { orderId } = req.body;
+    console.log(orderId, "ini order id");
+    await cancelTransaction(orderId);
+    await Order.update(
+      { orderStatus: "cancelled", paymentStatus: "cancelled" },
+      { where: { orderId } }
+    );
+    return res.status(200).json({ message: "successfully cancel" });
+  } catch (error) {
+    console.error(error, "ini errornya");
+    return res.status(500).json({ message: "error", error: error });
+  }
+};
+
 module.exports = {
   createOrder,
   paymentCallback,
   getAllProduct,
   getProductByOrderDetailId,
+  cancelOrder,
 };
