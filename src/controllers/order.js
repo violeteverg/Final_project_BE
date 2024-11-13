@@ -31,7 +31,7 @@ const createOrder = async (req, res) => {
       callbacks: {
         finish: "http://localhost:5173/order-list",
         unfinish: "http://localhost:5173/order-list",
-        error: "https://plants-ecommerce.vercel.app/pots",
+        error: "http://localhost:5173/order-list",
         cancel: "http://localhost:5173/order-list",
       },
     };

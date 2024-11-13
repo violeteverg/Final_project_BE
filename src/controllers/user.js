@@ -10,6 +10,7 @@ const { Op } = require("sequelize");
 const jwt = require("jsonwebtoken");
 const responseStatusMsg = require("../helper/responseMessage");
 const admin = require("../services/firebase");
+const generateRandomString = require("../utils/generateRandomString");
 
 const Register = async (req, res) => {
   try {
@@ -124,49 +125,54 @@ const Login = async (req, res) => {
     );
   }
 };
-// const loginWithGoogle = async (req, res) => {
-//     try {
-//         const { idToken } = req.body;
-//         const decodedToken = await admin.auth().verifyIdToken(idToken);
-//         let user = await User.findOne({
-//             where: { us_email: decodedToken.email },
-//             attributes: [
-//                 "us_username",
-//                 "us_id",
-//                 "us_email",
-//                 "us_fullname",
-//                 "us_phone_number",
-//                 "us_password",
-//                 "us_active",
-//             ],
-//         });
-//         if (!user) {
-//             user = await User.create({
-//                 us_email: decodedToken.email,
-//                 us_fullname: decodedToken.name,
-//                 us_username: decodedToken.email.split("@")[0],
-//                 us_password: await bcrypt.hash(generateRandomCharacter(100), 10),
-//                 us_phone_number: "08xxxxxxxxxx",
-//                 us_active: true,
-//             });
-//             user.dataValues.roles = [{ rl_code: "USR" }];
-//         }
-//         const loginToken = generateToken(user.us_id, user.us_email, "LOGIN_GOOGLE", "1d");
+const loginWithGoogle = async (req, res) => {
+  try {
+    const { idToken } = req.body;
+    console.log(idToken);
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    let user = await User.findOne({
+      where: { email: decodedToken.email },
+      attributes: ["id", "userName", "active", "email", "password", "isAdmin"],
+    });
+    if (!user) {
+      user = await User.create({
+        email: decodedToken.email,
+        fullName: decodedToken.name,
+        userName: decodedToken.email.split("@")[0],
+        password: await bcrypt.hash(generateRandomString(100), 10),
+        isAdmin: false,
+        active: true,
+      });
+    }
+    const loginToken = generateToken(
+      user.id,
+      { email: user.email, userName: user.userName },
+      "LOGIN_GOOGLE",
+      "1d"
+    );
+    delete user.dataValues.password;
+    user.dataValues["token"] = loginToken;
 
-//         return res.status(200).send({
-//             code: 200,
-//             message: "User successfully logged in!",
-//             data: user,
-//         });
-//     } catch (error) {
-//         console.log(error.message);
-//         return res.status(500).json({
-//             status: "failed",
-//             message: error.message,
-//             code: 500,
-//         });
-//     }
-// };
+    res.cookie("token", loginToken, {
+      // httpOnly: true,
+      // secure: true,
+      sameSite: "lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+    return res.status(200).send({
+      code: 200,
+      message: "User successfully logged in!",
+      data: user,
+    });
+  } catch (error) {
+    console.log(error.message);
+    return res.status(500).json({
+      status: "failed",
+      message: error.message,
+      code: 500,
+    });
+  }
+};
 const adminLogin = async (req, res) => {
   try {
     const { input, password } = req.body;
@@ -339,6 +345,7 @@ const resetPasswordd = async (req, res) => {
 module.exports = {
   Register,
   Login,
+  loginWithGoogle,
   adminLogin,
   logout,
   resetPassword,

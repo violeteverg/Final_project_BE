@@ -66,16 +66,33 @@ const findAllCart = async (req, res) => {
         },
       ],
     });
-
-    if (!cartItems.length) {
-      return res.status(404).json({ message: "No items found in cart" });
-    }
-
     res
       .status(200)
       .json({ message: "Cart items retrieved successfully", cartItems });
   } catch (error) {
     console.error(error);
+    res.status(500).json({ message: "Failed to retrieve cart items" });
+  }
+};
+
+const countCart = async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const cartItems = await Cart.findAll({
+      where: { userId },
+      attributes: ["quantity"],
+      include: [
+        {
+          model: Product,
+          attributes: ["quantity"],
+        },
+      ],
+    });
+    const totalQuantity = cartItems.reduce((sum, item) => {
+      return sum + (item.quantity || 0);
+    }, 0);
+    res.status(200).json({ totalQuantity });
+  } catch (error) {
     res.status(500).json({ message: "Failed to retrieve cart items" });
   }
 };
@@ -135,6 +152,7 @@ const removeCart = async (req, res) => {
 module.exports = {
   createCart,
   findAllCart,
+  countCart,
   updateCart,
   removeCart,
 };
