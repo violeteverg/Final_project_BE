@@ -6,8 +6,10 @@ const getOrderStatus = (transactionStatus) => {
       return { orderStatus: "completed", paymentStatus: "paid" };
     case "pending":
       return { orderStatus: "pending", paymentStatus: "pending" };
+    case "expire":
+      return { orderStatus: "expire", paymentStatus: "expire" };
     default:
-      return { orderStatus: "canceled", paymentStatus: "failed" };
+      return { orderStatus: "none", paymentStatus: "none" };
   }
 };
 

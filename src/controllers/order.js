@@ -82,7 +82,6 @@ const paymentCallback = async (req, res) => {
       signature_key,
       status_code,
     } = req.body;
-    console.log(req.body, "ini req body");
 
     const isVerified = verifySignatureKey(
       signature_key,
@@ -90,7 +89,8 @@ const paymentCallback = async (req, res) => {
       status_code,
       gross_amount
     );
-    console.log(isVerified, "ini isverified");
+    console.log(transaction_status, "ini status");
+
     if (!isVerified) {
       return res.status(403).json({ message: "Invalid signature key" });
     }
@@ -107,15 +107,15 @@ const paymentCallback = async (req, res) => {
   }
 };
 
-// const verifyStatus = async (req, res) => {
-//   try {
-//     const { orderId } = req.params;
-//     const verify = await verifyTransaction(orderId);
-//     return res.status(201).json({ message: "success", result: verify });
-//   } catch (error) {
-//     return res.status(500).json({});
-//   }
-// };
+const verifyStatus = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+    const verify = await verifyTransaction(orderId);
+    return res.status(201).json({ message: "success", result: verify });
+  } catch (error) {
+    return res.status(500).json({});
+  }
+};
 const getAllProduct = async (req, res) => {
   try {
     const userId = req.body.userId;
@@ -229,6 +229,7 @@ module.exports = {
   createOrder,
   paymentCallback,
   getAllProduct,
+  verifyStatus,
   getProductByOrderDetailId,
   cancelOrder,
 };
