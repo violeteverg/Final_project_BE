@@ -1,3 +1,4 @@
+const mysql2 = require("mysql2");
 module.exports = {
   development: {
     username: "root",
@@ -5,6 +6,7 @@ module.exports = {
     database: "plant_ecommerce",
     host: "localhost",
     dialect: "mysql",
+    dialectModule: mysql2,
   },
   test: {
     username: "root",
@@ -12,6 +14,7 @@ module.exports = {
     database: "plant_ecommerce",
     host: "localhost",
     dialect: "mysql",
+    dialectModule: mysql2,
   },
   production: {
     username: "root",
@@ -19,5 +22,6 @@ module.exports = {
     database: "plant_ecommerce",
     host: "localhost",
     dialect: "mysql",
+    dialectModule: mysql2,
   },
 };
