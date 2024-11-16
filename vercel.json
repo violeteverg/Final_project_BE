@@ -15,8 +15,5 @@
         "Access-Control-Allow-Origin": "*"
       }
     }
-  ],
-  "hooks": {
-    "postdeploy": "npx sequelize-cli db:migrate"
-  }
+  ]
 }
