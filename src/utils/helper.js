@@ -63,7 +63,7 @@ const emailVerification = async (
       username: userName,
       title: title,
       description: description,
-      verificationLink: `${process.env.BASE_URL}:${process.env.PORT}/api/auth/verify-email?token=${verificationToken}`,
+      verificationLink: `${process.env.BASE_URL_FRONTEND}/api/auth/verify-email?token=${verificationToken}`,
     });
     const transporter = nodemailer.createTransport({
       service: process.env.MAIL_SERVICE,

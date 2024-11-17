@@ -8,7 +8,7 @@ const getUserId = async (req, res, next) => {
       return res.status(401).json({ message: "Token not found" });
     }
     const payload = jwt.verify(token, process.env.JWT_SECRET);
-    console.log(req.body, "middleware");
+    console.log("Token diterima:", req.cookies.token);
 
     req.body.userId = payload.id;
     next();

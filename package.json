@@ -5,6 +5,8 @@
   "scripts": {
     "start": "npm run serve",
     "dev": "concurrently  \"npm run serve:watch\"",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
+    "test:coverage": "cross-env NODE_ENV=test jest  --coverage",
     "serve": "node index.js",
     "serve:watch": "nodemon index.js",
     "migrate": "npx sequelize-cli db:migrate",
@@ -24,21 +26,45 @@
     "concurrently": "^9.0.1",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "firebase": "^11.0.1",
     "firebase-admin": "^12.7.0",
     "handlebars": "^4.7.8",
     "http-errors": "^2.0.0",
+    "jest": "^29.7.0",
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.4",
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.7",
-    "sequelize": "^6.37.4"
+    "sequelize": "^6.37.4",
+    "supertest": "^7.0.0"
   },
   "devDependencies": {
     "sequelize-cli": "^6.6.2"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testTimeout": 5000,
+    "coveragePathIgnorePatterns": [
+      "/node_modules/"
+    ],
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": [
+      "text",
+      "lcov"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
   }
 }
