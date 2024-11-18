@@ -154,9 +154,9 @@ const loginWithGoogle = async (req, res) => {
     user.dataValues["token"] = loginToken;
 
     res.cookie("token", loginToken, {
-      // httpOnly: true,
-      // secure: true,
-      sameSite: "lax",
+      httpOnly: true,
+      secure: true,
+
       maxAge: 24 * 60 * 60 * 1000,
     });
     return res.status(200).send({

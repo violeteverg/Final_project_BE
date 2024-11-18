@@ -11,7 +11,6 @@ const port = process.env.PORT || 3001;
 
 app.use(
   cors({
-    httpOnly: true,
     credentials: true,
     origin: true,
   })
