@@ -13,6 +13,8 @@ app.use(
   cors({
     credentials: true,
     origin: true,
+    HttpOnly: true,
+    secured: true,
   })
 );
 // app.options(
