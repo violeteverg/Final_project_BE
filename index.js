@@ -15,10 +15,6 @@ app.use(
     origin: true,
   })
 );
-// app.options(
-//   "*",
-//   cors({ origin: "http://localhost:5173", credentials: true, origin: true })
-// );
 
 app.use(bodyParser.json());
 app.use(express.json());

@@ -57,7 +57,7 @@ const Register = async (req, res) => {
 const Login = async (req, res) => {
   try {
     const { input, password } = req.body;
-    // console.log(input, "><><>");
+
     const { value, error } = loginSchema.validate({ input, password });
     const user = await User.findOne({
       attributes: ["id", "userName", "active", "email", "password", "isAdmin"],
@@ -72,7 +72,7 @@ const Login = async (req, res) => {
         message: error.details[0].message,
       });
     }
-    // console.log(user, "user login");
+
     const loginToken = generateToken(
       user.id,
       { email: user.email, userName: user.userName },
