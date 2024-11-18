@@ -13,7 +13,6 @@ app.use(
   cors({
     credentials: true,
     origin: true,
-    sameSite: "none",
   })
 );
 // app.options(
