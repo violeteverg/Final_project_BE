@@ -12,7 +12,7 @@ const port = process.env.PORT || 3001;
 app.use(
   cors({
     credentials: true,
-    origin: "https://leafy-nest-user.vercel.app",
+    origin: true,
   })
 );
 // app.options(

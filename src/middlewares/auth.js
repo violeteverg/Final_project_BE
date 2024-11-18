@@ -2,7 +2,8 @@ const jwt = require("jsonwebtoken");
 
 const getUserId = async (req, res, next) => {
   try {
-    const token = req.cookies?.token;
+    const token = req.headers["token"];
+    console.log(token, "ini token");
 
     if (!token) {
       return res.status(401).json({ message: "Token not found" });
