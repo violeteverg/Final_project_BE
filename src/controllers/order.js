@@ -8,6 +8,7 @@ const { Order, OrderItem, Product } = require("../models");
 const verifySignatureKey = require("../utils/verifySignatureKey");
 const updateOrderStatus = require("../services/updateOrder");
 const { Op } = require("sequelize");
+const responseStatusMsg = require("../helper/responseMessage");
 
 // create & read
 const createOrder = async (req, res) => {
@@ -63,12 +64,22 @@ const createOrder = async (req, res) => {
       isBuyNow: isBuyNow,
       orderProduct: orderItems,
     });
-    return res
-      .status(201)
-      .json({ message: "ini create success", result: transactionDetails });
+    return responseStatusMsg(
+      res,
+      201,
+      "success create order",
+      "success_data",
+      transactionDetails
+    );
   } catch (error) {
-    console.log(error, "ini error");
-    return res.status(500).json({ message: "ini gagal" });
+    return responseStatusMsg(
+      res,
+      500,
+      "Failed to create order",
+      "error",
+      null,
+      error
+    );
   }
 };
 
@@ -107,16 +118,16 @@ const paymentCallback = async (req, res) => {
   }
 };
 
-const verifyStatus = async (req, res) => {
-  try {
-    const { orderId } = req.params;
-    const verify = await verifyTransaction(orderId);
-    return res.status(201).json({ message: "success", result: verify });
-  } catch (error) {
-    return res.status(500).json({});
-  }
-};
-const getAllProduct = async (req, res) => {
+// const verifyStatus = async (req, res) => {
+//   try {
+//     const { orderId } = req.params;
+//     const verify = await verifyTransaction(orderId);
+//     return res.status(201).json({ message: "success", result: verify });
+//   } catch (error) {
+//     return res.status(500).json({});
+//   }
+// };
+const getAllOrder = async (req, res) => {
   try {
     const userId = req.body.userId;
     const order = await Order.findAll({
@@ -134,11 +145,11 @@ const getAllProduct = async (req, res) => {
         },
       ],
     });
-    // const orderItems = order.OrderItem.orderProduct;
+
     return res.status(200).json({ message: "success", data: order });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ message: error });
+    return res.status(500).json({ message: "error get all order" });
   }
 };
 
@@ -228,8 +239,8 @@ const cancelOrder = async (req, res) => {
 module.exports = {
   createOrder,
   paymentCallback,
-  getAllProduct,
-  verifyStatus,
+  getAllOrder,
+  // verifyStatus,
   getProductByOrderDetailId,
   cancelOrder,
 };

@@ -8,8 +8,6 @@ const paginate = require("../utils/pagination");
 
 const createProduct = async (req, res) => {
   try {
-    // console.log(req.file, "ini file request");
-
     const { error } = productSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
