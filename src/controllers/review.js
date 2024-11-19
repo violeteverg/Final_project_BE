@@ -50,7 +50,6 @@ const findAllReview = async (req, res) => {
       reviews
     );
   } catch (error) {
-    console.log(error.message, "message error");
     return responseStatusMsg(
       res,
       500,
