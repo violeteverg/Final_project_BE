@@ -10,7 +10,10 @@ const updateOrderStatus = require("../services/updateOrder");
 const { Op } = require("sequelize");
 const responseStatusMsg = require("../helper/responseMessage");
 
-// create & read
+const isProduction =
+  process.env.NODE_ENV === "production"
+    ? "https://leafy-nest-user.vercel.app/my-orders"
+    : "http://localhost:5173/my-orders";
 const createOrder = async (req, res) => {
   try {
     const { totalAmount, orderItems, addressName, isBuyNow } = req.body;
@@ -30,10 +33,10 @@ const createOrder = async (req, res) => {
         secure: true,
       },
       callbacks: {
-        finish: "http://localhost:5173/order-list",
-        unfinish: "http://localhost:5173/order-list",
-        error: "http://localhost:5173/order-list",
-        cancel: "http://localhost:5173/order-list",
+        finish: isProduction,
+        unfinish: isProduction,
+        error: isProduction,
+        cancel: isProduction,
       },
     };
     const transactionDetails = await createTransaction(parameter);

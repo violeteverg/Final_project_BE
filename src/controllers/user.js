@@ -153,24 +153,29 @@ const loginWithGoogle = async (req, res) => {
     delete user.dataValues.password;
     user.dataValues["token"] = loginToken;
 
-    res.cookie("token", loginToken, {
-      httpOnly: true,
-      secure: true,
-
-      maxAge: 24 * 60 * 60 * 1000,
-    });
-    return res.status(200).send({
-      code: 200,
-      message: "User successfully logged in!",
-      data: user,
-    });
+    // return res.status(200).send({
+    //   code: 200,
+    //   message: "User successfully logged in!",
+    //   data: user,
+    // });
+    console.log(user, "ini user");
+    return responseStatusMsg(
+      res,
+      200,
+      "Login successful",
+      "success_data",
+      user
+    );
   } catch (error) {
     console.log(error.message);
-    return res.status(500).json({
-      status: "failed",
-      message: error.message,
-      code: 500,
-    });
+    return responseStatusMsg(
+      res,
+      500,
+      "An error occurred",
+      "error",
+      null,
+      error
+    );
   }
 };
 const adminLogin = async (req, res) => {
@@ -212,7 +217,6 @@ const adminLogin = async (req, res) => {
     const loginToken = generateToken(user.id, user.email, "ADMIN", "1d");
 
     res.cookie("_lgnTkn", loginToken, {
-      // httpOnly: true,
       sameSite: "lax",
       maxAge: 24 * 60 * 60 * 1000,
     });
