@@ -9,13 +9,10 @@ const createAdress = async (req, res) => {
     if (addressCount >= 3) {
       return responseStatusMsg(res, 400, "user only can create 3 adress");
     }
-
     const primaryAddressExists = await Address.findOne({
       where: { userId, isPrimary: true },
     });
-
     const isPrimary = !primaryAddressExists;
-
     const addresses = await Address.create({
       userId,
       fullAddress,
@@ -25,6 +22,7 @@ const createAdress = async (req, res) => {
       country,
       isPrimary,
     });
+    console.log(addresses, "Addresses being sent");
 
     return responseStatusMsg(
       res,

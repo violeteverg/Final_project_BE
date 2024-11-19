@@ -10,7 +10,6 @@ const responseStatusMsg = (res, code, message, type, data, error) => {
   } else if (type === "error" && error !== undefined) {
     response.error = error;
   }
-
   return res.status(code).json(response);
 };
 
