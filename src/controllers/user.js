@@ -249,39 +249,6 @@ const logout = async (req, res) => {
     return responseStatusMsg(res, 500, error.message, "error", null, error);
   }
 };
-const resetPassword = async (req, res) => {
-  try {
-    const { newPassword } = req.body;
-    const token = req.cookies.token;
-
-    const { error } = resetPasswordSchema.validate({ newPassword });
-    if (error) {
-      return responseStatusMsg(res, 400, error.details[0].message, "error");
-    }
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await User.findOne({
-      where: {
-        id: decoded.id,
-      },
-    });
-
-    if (!user) {
-      return responseStatusMsg(res, 404, "User not found", "error");
-    }
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
-    user.password = hashedPassword;
-    await user.save();
-
-    return responseStatusMsg(
-      res,
-      200,
-      "Password has been reset successfully",
-      "success_data"
-    );
-  } catch (error) {
-    return responseStatusMsg(res, 500, error.message, "error", null, error);
-  }
-};
 
 const forgetPassword = async (req, res) => {
   try {
@@ -322,22 +289,62 @@ const forgetPassword = async (req, res) => {
     return responseStatusMsg(res, 500, error?.message, "error", null, error);
   }
 };
-const resetPasswordd = async (req, res) => {
+const resetVerifyEmail = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return responseStatusMsg(
+        res,
+        404,
+        "User not found with this email",
+        "error"
+      );
+    }
+
+    const resetToken = generateToken(
+      user.id,
+      user.email,
+      "VERIFICATION",
+      "15m"
+    );
+
+    await emailVerification(
+      user.userName,
+      email,
+      resetToken,
+      "Verify Email",
+      "Click the link below to verify email again."
+    );
+
+    return responseStatusMsg(
+      res,
+      200,
+      "Password reset email sent successfully.",
+      "success_data"
+    );
+  } catch (error) {
+    return responseStatusMsg(res, 500, error?.message, "error", null, error);
+  }
+};
+const resetPassword = async (req, res) => {
   try {
     const { newPassword } = req.body;
     const { token } = req.query;
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    // console.log(decoded, ">><decoded");
+    console.log(decoded, "ini decoded");
+
     const { value, error } = resetPasswordSchema.validate({ newPassword });
     if (error) {
       return responseStatusMsg(res, 400, error.details[0].message, "error");
     }
     const hashedPassword = await bcrypt.hash(value.newPassword, 10);
 
-    const user = await User.update(
+    await User.update(
       { password: hashedPassword },
-      { where: { email: decoded.email } }
+      { where: { email: decoded.userValue } }
     );
 
     return res.json({ message: "Password reset successful!" });
@@ -352,7 +359,7 @@ module.exports = {
   loginWithGoogle,
   adminLogin,
   logout,
-  resetPassword,
   forgetPassword,
-  resetPasswordd,
+  resetPassword,
+  resetVerifyEmail,
 };

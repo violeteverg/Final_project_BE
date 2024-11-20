@@ -4,10 +4,10 @@ const {
   Login,
   adminLogin,
   logout,
-  resetPassword,
   forgetPassword,
-  resetPasswordd,
+  resetPassword,
   loginWithGoogle,
+  resetVerifyEmail,
 } = require("../controllers/user");
 const { verifyEmail } = require("../utils/helper");
 
@@ -19,8 +19,8 @@ userRouter.post("/login", Login);
 userRouter.post("/login-google", loginWithGoogle);
 userRouter.post("/admin-login", adminLogin);
 userRouter.post("/logout", logout);
-userRouter.post("/reset-password", resetPassword);
 userRouter.post("/forget-password", forgetPassword);
-userRouter.post("/forgetreset-password", resetPasswordd);
+userRouter.post("/reset-password", resetPassword);
+userRouter.post("/reset-verifyemail", resetVerifyEmail);
 
 module.exports = userRouter;
