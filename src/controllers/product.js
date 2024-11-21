@@ -107,7 +107,15 @@ const findProductById = async (req, res) => {
     const { id } = req.params;
     const products = await Product.findOne({
       where: { id: id },
-      attributes: ["id", "image", "title", "description", "price", "quantity"],
+      attributes: [
+        "id",
+        "image",
+        "title",
+        "description",
+        "price",
+        "quantity",
+        "categoryId",
+      ],
       include: [
         {
           model: Review,

@@ -5,15 +5,15 @@ const {
   paymentCallback,
   getProductByOrderDetailId,
   cancelOrder,
-  // verifyStatus,
   getAllOrder,
+  getAllOrderAdmin,
 } = require("../controllers/order");
 
 const orderRouter = Router();
 
 orderRouter.post("/transactions", getUserId, createOrder);
 orderRouter.post("/notification", paymentCallback);
-// orderRouter.post("/verify/:orderId", verifyStatus);
+orderRouter.get("/admin/findAll", getAllOrderAdmin);
 orderRouter.get("/findAll", getUserId, getAllOrder);
 orderRouter.get("/findId/:id", getUserId, getProductByOrderDetailId);
 orderRouter.post("/cancel", cancelOrder);

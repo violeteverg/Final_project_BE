@@ -4,11 +4,12 @@ const {
   cancelTransaction,
 } = require("../services/midtransService");
 const generateRandomString = require("../utils/generateRandomString");
-const { Order, OrderItem, Product } = require("../models");
+const { Order, OrderItem, Product, User } = require("../models");
 const verifySignatureKey = require("../utils/verifySignatureKey");
 const updateOrderStatus = require("../services/updateOrder");
 const { Op } = require("sequelize");
 const responseStatusMsg = require("../helper/responseMessage");
+const paginate = require("../utils/pagination");
 
 const isProduction =
   process.env.NODE_ENV === "production"
@@ -156,6 +157,49 @@ const getAllOrder = async (req, res) => {
   }
 };
 
+const getAllOrderAdmin = async (req, res) => {
+  try {
+    const { search, page = 1, limit = 10 } = req.query;
+    const whereCondition = {
+      ...(search && {
+        [Op.or]: [{ orderId: { [Op.like]: `%${search}%` } }],
+      }),
+    };
+    const order = await Order.findAll({
+      where: whereCondition,
+      include: [
+        {
+          model: OrderItem,
+          attributes: ["orderProduct"],
+        },
+        {
+          model: User,
+          attributes: ["fullName"],
+        },
+      ],
+    });
+
+    const { data, pagination } = paginate(order, +page, +limit);
+
+    return responseStatusMsg(
+      res,
+      200,
+      "Products retrieved successfully",
+      "success_data",
+      { data, pagination }
+    );
+  } catch (error) {
+    return responseStatusMsg(
+      res,
+      500,
+      "error get all order",
+      "error",
+      null,
+      error
+    );
+  }
+};
+
 const getProductByOrderDetailId = async (req, res) => {
   try {
     const { id } = req.params;
@@ -243,7 +287,7 @@ module.exports = {
   createOrder,
   paymentCallback,
   getAllOrder,
-  // verifyStatus,
+  getAllOrderAdmin,
   getProductByOrderDetailId,
   cancelOrder,
 };

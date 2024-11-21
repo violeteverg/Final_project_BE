@@ -214,22 +214,21 @@ const adminLogin = async (req, res) => {
       });
     }
 
-    const loginToken = generateToken(user.id, user.email, "ADMIN", "1d");
-
-    res.cookie("_lgnTkn", loginToken, {
-      sameSite: "lax",
-      maxAge: 24 * 60 * 60 * 1000,
-    });
+    const loginToken = generateToken(
+      user.id,
+      { email: user.email, userName: user.userName },
+      "ADMIN",
+      "1d"
+    );
+    console.log(loginToken, "login token");
+    user.dataValues["token"] = loginToken;
+    console.log(user, "ini admin token");
 
     return res.status(200).send({
       code: 200,
       status: "success",
       message: "Admin login successful",
-      user: {
-        id: user.id,
-        userName: user.userName,
-        email: user.email,
-      },
+      user,
     });
   } catch (error) {
     console.error(error);
