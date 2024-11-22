@@ -122,19 +122,10 @@ const paymentCallback = async (req, res) => {
   }
 };
 
-// const verifyStatus = async (req, res) => {
-//   try {
-//     const { orderId } = req.params;
-//     const verify = await verifyTransaction(orderId);
-//     return res.status(201).json({ message: "success", result: verify });
-//   } catch (error) {
-//     return res.status(500).json({});
-//   }
-// };
 const getAllOrder = async (req, res) => {
   try {
     const userId = req.body.userId;
-    const order = await Order.findAll({
+    const orders = await Order.findAll({
       where: {
         userId: userId,
         vaNumber: {
@@ -150,7 +141,17 @@ const getAllOrder = async (req, res) => {
       ],
     });
 
-    return res.status(200).json({ message: "success", data: order });
+    const formattedOrders = orders.map((order) => {
+      const plainOrder = order.get();
+      return {
+        ...plainOrder,
+        orderProduct: plainOrder.OrderItem.orderProduct,
+        isBuyNow: plainOrder.OrderItem.isBuyNow,
+        OrderItem: undefined,
+      };
+    });
+
+    return res.status(200).json({ message: "success", data: formattedOrders });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "error get all order" });
@@ -203,6 +204,7 @@ const getAllOrderAdmin = async (req, res) => {
 const getProductByOrderDetailId = async (req, res) => {
   try {
     const { id } = req.params;
+    console.log(id, "ini adalah id");
 
     const order = await Order.findOne({
       where: { id },

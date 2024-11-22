@@ -16,6 +16,7 @@ orderRouter.post("/notification", paymentCallback);
 orderRouter.get("/admin/findAll", getAllOrderAdmin);
 orderRouter.get("/findAll", getUserId, getAllOrder);
 orderRouter.get("/findId/:id", getUserId, getProductByOrderDetailId);
+orderRouter.get("/admin/findId/:id", getProductByOrderDetailId);
 orderRouter.post("/cancel", cancelOrder);
 
 module.exports = orderRouter;
