@@ -21,9 +21,7 @@ const createOrder = async (req, res) => {
 
     console.log(orderItems, "ini order items");
     const userId = req.body.userId;
-    const randomChar1 = generateRandomString(5);
-    const randomChar2 = generateRandomString(5);
-    const order_id = `TpLnts-${randomChar1}-${randomChar2}`;
+    const order_id = `LPlants-${Date.now()}`;
 
     const parameter = {
       transaction_details: {
