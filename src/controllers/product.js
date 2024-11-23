@@ -134,8 +134,8 @@ const findProductById = async (req, res) => {
     }
     return responseStatusMsg(
       res,
-      201,
-      "Product succes create",
+      200,
+      "Product succes found",
       "success_data",
       products
     );

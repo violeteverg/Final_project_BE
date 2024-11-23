@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const getUserId = async (req, res, next) => {
   try {
-    const token = req.headers["token"];
+    const token = req.headers["_usertkn"];
     if (!token) {
       return res.status(401).json({ message: "Token not found" });
     }
