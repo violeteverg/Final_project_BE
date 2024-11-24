@@ -7,6 +7,7 @@ const {
   cancelOrder,
   getAllOrder,
   getAllOrderAdmin,
+  getStatisticsOrder,
 } = require("../controllers/order");
 
 const orderRouter = Router();
@@ -17,6 +18,7 @@ orderRouter.get("/admin/findAll", getAllOrderAdmin);
 orderRouter.get("/findAll", getUserId, getAllOrder);
 orderRouter.get("/findId/:id", getUserId, getProductByOrderDetailId);
 orderRouter.get("/admin/findId/:id", getProductByOrderDetailId);
+orderRouter.get("/admin/stat", getStatisticsOrder);
 orderRouter.post("/cancel", cancelOrder);
 
 module.exports = orderRouter;

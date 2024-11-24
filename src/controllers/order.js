@@ -198,6 +198,38 @@ const getAllOrderAdmin = async (req, res) => {
     );
   }
 };
+const getStatisticsOrder = async (req, res) => {
+  try {
+    const orders = await Order.findAll();
+    const userCount = await User.count();
+    const totalRevenue = orders.reduce(
+      (sum, order) => sum + order.totalAmount,
+      0
+    );
+    const totalOrders = orders.length;
+
+    return responseStatusMsg(
+      res,
+      200,
+      "Orders retrieved successfully",
+      "success_data",
+      {
+        user: userCount,
+        totalOrders,
+        totalRevenue,
+      }
+    );
+  } catch (error) {
+    return responseStatusMsg(
+      res,
+      500,
+      "Error getting all orders",
+      "error",
+      null,
+      error
+    );
+  }
+};
 
 const getProductByOrderDetailId = async (req, res) => {
   try {
@@ -288,6 +320,7 @@ module.exports = {
   paymentCallback,
   getAllOrder,
   getAllOrderAdmin,
+  getStatisticsOrder,
   getProductByOrderDetailId,
   cancelOrder,
 };
