@@ -44,7 +44,7 @@ describe("POST /api/address/create", () => {
     });
     const res = await request(app)
       .post("/api/address/create")
-      .set("token", "Bearer token");
+      .set("_usertkn", "Bearer token");
     expect(res.status).toBe(403);
     expect(res.body).toHaveProperty("message", "Invalid token");
   });
@@ -62,7 +62,7 @@ describe("POST /api/address/create", () => {
     Address.count.mockResolvedValue(3);
     const res = await request(app)
       .post("/api/address/create")
-      .set("token", "Bearer token")
+      .set("_usertkn", "Bearer token")
       .send(req);
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty("message", "user only can create 3 adress");
@@ -95,7 +95,7 @@ describe("POST /api/address/create", () => {
     });
     const res = await request(app)
       .post("/api/address/create")
-      .set("token", "Bearer token")
+      .set("_usertkn", "Bearer token")
       .send(req);
 
     console.log(res.body, "ini req body");
@@ -131,7 +131,7 @@ describe("POST /api/address/create", () => {
 
     const res = await request(app)
       .post("/api/address/create")
-      .set("token", "Bearer token")
+      .set("_usertkn", "Bearer token")
       .send(req);
 
     console.log(res.body, "ini req body");
@@ -161,7 +161,7 @@ describe("POST /api/address/create", () => {
     ]);
     const res = await request(app)
       .get("/api/address/findAll")
-      .set("token", "Bearer token");
+      .set("_usertkn", "Bearer token");
     console.log(res.body, "ini bodyresponse");
     expect(res.status).toBe(200);
   });
@@ -175,7 +175,7 @@ describe("POST /api/address/create", () => {
 
     const res = await request(app)
       .get("/api/address/findAll")
-      .set("token", "Bearer token");
+      .set("_usertkn", "Bearer token");
 
     expect(res.status).toBe(500);
   });
@@ -189,7 +189,7 @@ describe("POST /api/address/create", () => {
     Address.findOne.mockResolvedValue(null);
     const res = await request(app)
       .patch("/api/address/update/1")
-      .set("token", "Bearer token")
+      .set("_usertkn", "Bearer token")
       .send({
         fullAddress: "new address",
         city: "new city",
@@ -222,7 +222,7 @@ describe("POST /api/address/create", () => {
     Address.findOne.mockResolvedValue(mockAddress);
     const res = await request(app)
       .patch("/api/address/update/1")
-      .set("token", "Bearer token")
+      .set("_usertkn", "Bearer token")
       .send({
         fullAddress: "jl.bahagia",
         city: "bandung",
@@ -258,7 +258,7 @@ describe("POST /api/address/create", () => {
     });
     const res = await request(app)
       .patch("/api/address/update/1")
-      .set("token", "Bearer token")
+      .set("_usertkn", "Bearer token")
       .send({
         fullAddress: "new address",
         city: "new city",
@@ -277,7 +277,7 @@ describe("POST /api/address/create", () => {
     Address.findOne.mockResolvedValue(null);
     const res = await request(app)
       .delete("/api/address/delete/22")
-      .set("token", "Bearer token");
+      .set("_usertkn", "Bearer token");
 
     expect(res.status).toBe(404);
     expect(res.body).toHaveProperty("message", "address not found.");
@@ -303,7 +303,7 @@ describe("POST /api/address/create", () => {
 
     const res = await request(app)
       .delete("/api/address/delete/22")
-      .set("token", "Bearer token");
+      .set("_usertkn", "Bearer token");
 
     expect(res.status).toBe(200);
     expect(res.body).toHaveProperty("message", "address successfully removed");
@@ -321,7 +321,7 @@ describe("POST /api/address/create", () => {
 
     const res = await request(app)
       .delete("/api/address/delete/22")
-      .set("token", "Bearer token");
+      .set("_usertkn", "Bearer token");
 
     expect(res.status).toBe(500);
   });

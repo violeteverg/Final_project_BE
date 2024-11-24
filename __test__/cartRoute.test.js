@@ -36,7 +36,7 @@ describe("Cart /api/cart", () => {
       });
       const res = await request(app)
         .post("/api/cart/create")
-        .set("token", "Bearer token")
+        .set("_usertkn", "Bearer token")
         .send({ productId: 1 });
 
       expect(res.status).toBe(404);
@@ -55,7 +55,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/create")
         .send({ productId: 1, quantity: 2 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(404);
       expect(res.body).toHaveProperty("message", "Product not found");
@@ -70,7 +70,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/create")
         .send({ productId: 1, quantity: 10 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(404);
       expect(res.body.message).toBe(
@@ -94,7 +94,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/create")
         .send({ productId: 1, quantity: 3 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Quantity updated in cart");
@@ -118,7 +118,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/create")
         .send({ productId: 1, quantity: 3 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(404);
       expect(res.body.message).toBe(
@@ -139,7 +139,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/create")
         .send({ productId: 1, quantity: 2 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Item added to cart");
@@ -158,7 +158,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/create")
         .send({ productId: 1, quantity: 2 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(500);
       expect(res.body.message).toBe("Failed to create cart item");
@@ -186,7 +186,7 @@ describe("Cart /api/cart", () => {
 
       const res = await request(app)
         .get("/api/cart/findAll")
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Cart items retrieved successfully");
@@ -210,7 +210,7 @@ describe("Cart /api/cart", () => {
 
       const res = await request(app)
         .get("/api/cart/findAll")
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(500);
       expect(res.body.message).toBe("Failed to retrieve cart items");
@@ -230,7 +230,7 @@ describe("Cart /api/cart", () => {
 
       const res = await request(app)
         .get("/api/cart/count")
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("totalQuantity", 5);
@@ -244,7 +244,7 @@ describe("Cart /api/cart", () => {
 
       const res = await request(app)
         .get("/api/cart/count")
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("totalQuantity", 0);
@@ -258,7 +258,7 @@ describe("Cart /api/cart", () => {
 
       const res = await request(app)
         .get("/api/cart/count")
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(500);
       expect(res.body).toHaveProperty(
@@ -291,7 +291,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/update/1")
         .send({ userId: 1, quantity: 5 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Cart item updated successfully");
@@ -307,7 +307,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/update/1")
         .send({ userId: 1, quantity: 5 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(404);
       expect(res.body.message).toBe("Cart item not found");
@@ -331,7 +331,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/update/1")
         .send({ userId: 1, quantity: 5 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(404);
       expect(res.body.message).toBe("Product not found");
@@ -360,7 +360,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/update/1")
         .send({ userId: 1, quantity: 10 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(404);
       expect(res.body.message).toBe(
@@ -392,7 +392,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/update/1")
         .send({ userId: 1, quantity: 3 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Cart item updated successfully");
@@ -408,7 +408,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .post("/api/cart/update/1")
         .send({ userId: 1, quantity: 5 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(500);
       expect(res.body.message).toBe("Failed to update cart item");
@@ -432,7 +432,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .delete("/api/cart/delete/1")
         .send({ userId: 1 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Cart item removed successfully");
@@ -448,7 +448,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .delete("/api/cart/delete/1")
         .send({ userId: 1 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(404);
       expect(res.body.message).toBe("Cart item not found");
@@ -463,7 +463,7 @@ describe("Cart /api/cart", () => {
       const res = await request(app)
         .delete("/api/cart/delete/1")
         .send({ userId: 1 })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(500);
       expect(res.body.message).toBe("Failed to remove cart item");

@@ -7,7 +7,7 @@ const {
 const verifySignatureKey = require("../src/utils/verifySignatureKey");
 const updateOrderStatus = require("../src/services/updateOrder");
 
-const { Order, OrderItem, Product } = require("../src/models");
+const { Order, OrderItem, Product, User } = require("../src/models");
 const app = require("../index");
 const jwt = require("jsonwebtoken");
 
@@ -24,6 +24,9 @@ jest.mock("../src/models", () => ({
   },
   Product: {
     findAll: jest.fn(),
+  },
+  User: {
+    count: jest.fn(),
   },
 }));
 jest.mock("../src/utils/verifySignatureKey", () => jest.fn());
@@ -83,7 +86,7 @@ describe("Order /api/order", () => {
           isBuyNow: false,
           userId: 1,
         })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(201);
       expect(res.body.message).toBe("success create order");
@@ -92,7 +95,7 @@ describe("Order /api/order", () => {
         userId: 1,
         addressName: "123 Main St",
         orderDate: expect.any(Date),
-        orderId: expect.stringMatching(/^TpLnts-/),
+        orderId: expect.stringMatching(/^LPlants/),
         orderStatus: "pending",
         paymentId: mockTransactionDetails.token,
         paymentStatus: "pending",
@@ -121,7 +124,7 @@ describe("Order /api/order", () => {
           isBuyNow: false,
           userId: 1,
         })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(500);
       expect(res.body.message).toBe("Failed to create order");
@@ -156,7 +159,7 @@ describe("Order /api/order", () => {
           signature_key: mockSignatureKey,
           status_code: mockStatusCode,
         })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe(
@@ -217,30 +220,46 @@ describe("Order /api/order", () => {
   describe("GET /api/order", () => {
     it("should return all orders for a user", async () => {
       jwt.verify.mockReturnValue({
-        id: 1,
+        id: 18,
       });
       const mockOrders = [
         {
-          id: 1,
-          userId: 123,
+          id: 4,
+          userId: 18,
           vaNumber: "12345",
-          createdAt: "2024-11-19T00:00:00Z",
-          OrderItem: [
-            { orderProduct: "Product1", isBuyNow: true },
-            { orderProduct: "Product2", isBuyNow: false },
-          ],
+          createdAt: "2024-11-23T12:53:29.000Z",
+          updatedAt: "2024-11-23T12:53:40.000Z",
+          OrderItem: {
+            orderProduct: "succulent",
+            isBuyNow: true,
+          },
         },
       ];
-
-      Order.findAll.mockResolvedValue(mockOrders);
-
+      Order.findAll.mockResolvedValue(
+        mockOrders.map((order) => ({
+          ...order,
+          get: () => order,
+        }))
+      );
       const response = await request(app)
         .get("/api/order/findAll")
-        .set("token", "Bearer token");
+        .send({ userId: 18 })
+        .set("_usertkn", "Bearer token");
 
+      const formattedOrders = [
+        {
+          id: 4,
+          userId: 18,
+          vaNumber: "12345",
+          createdAt: "2024-11-23T12:53:29.000Z",
+          updatedAt: "2024-11-23T12:53:40.000Z",
+          orderProduct: "succulent",
+          isBuyNow: true,
+        },
+      ];
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("success");
-      expect(response.body.data).toEqual(mockOrders);
+      expect(response.body.data).toEqual(formattedOrders);
     });
 
     it("should handle errors when fetching orders", async () => {
@@ -251,10 +270,106 @@ describe("Order /api/order", () => {
 
       const response = await request(app)
         .get("/api/order/findAll")
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(response.status).toBe(500);
       expect(response.body.message).toBe("error get all order");
+    });
+    it("should return statistics successfully", async () => {
+      Order.findAll.mockResolvedValue([
+        { totalAmount: 100000 },
+        { totalAmount: 150000 },
+        { totalAmount: 200000 },
+      ]);
+      User.count.mockResolvedValue(15);
+
+      const response = await request(app).get("/api/order/admin/stat");
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual({
+        code: 200,
+        message: "Orders retrieved successfully",
+        result: {
+          user: 15,
+          totalOrders: 3,
+          totalRevenue: 450000,
+        },
+      });
+    });
+    it("should handle errors gracefully", async () => {
+      Order.findAll.mockRejectedValue(new Error("Database error"));
+
+      const response = await request(app).get("/api/order/admin/stat");
+
+      expect(response.status).toBe(500);
+    });
+
+    it("should return all order for admin", async () => {
+      const mockOrders = [
+        {
+          id: 1,
+          userId: 18,
+          addressName: "jl.senang banget",
+          orderId: "TpLnts-YTZx1-wm85U",
+          orderDate: "2024-11-22T12:46:19.000Z",
+          orderStatus: "completed",
+          paymentId: "f2b28d92-9b29-4880-b1d3-ef32690fc8d3",
+          paymentStatus: "paid",
+          totalAmount: 120000,
+          vaNumber: [
+            {
+              bank: "bca",
+              va_number: "60991008001977877688922",
+            },
+          ],
+          createdAt: "2024-11-22T12:46:19.000Z",
+          updatedAt: "2024-11-22T12:46:28.000Z",
+          OrderItem: {
+            orderProduct: [
+              {
+                image:
+                  "https://res.cloudinary.com/dd2h1xakd/image/upload/v1730268990/product/wlwnzragcp5ro29epudm.png",
+                price: 120000,
+                quantity: 1,
+                productId: 7,
+                productName: "cactus",
+              },
+            ],
+          },
+          User: {
+            fullName: "udinx",
+          },
+        },
+      ];
+
+      const mockPagination = {
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 1,
+      };
+      Order.findAll.mockResolvedValue(mockOrders);
+      const res = await request(app)
+        .get("/api/order/admin/findAll")
+        .query({ page: 1, limit: 10 });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual({
+        code: 200,
+        message: "Products retrieved successfully",
+        result: {
+          data: mockOrders,
+          pagination: mockPagination,
+        },
+      });
+    });
+    it("should return 500 if an error occurs", async () => {
+      Order.findAll.mockRejectedValue(new Error("Database error"));
+
+      const res = await request(app)
+        .get("/api/order/admin/findAll")
+        .query({ page: 1, limit: 10 });
+
+      expect(res.statusCode).toBe(500);
     });
   });
   describe("GET /api/orders/order/:id", () => {
@@ -347,7 +462,7 @@ describe("Order /api/order", () => {
 
       const response = await request(app)
         .get("/api/order/findId/35")
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(response.status).toBe(200);
       expect(response.body.message).toBe("success");
@@ -381,7 +496,7 @@ describe("Order /api/order", () => {
 
       const response = await request(app)
         .get("/api/order/findId/999")
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(response.status).toBe(404);
       expect(response.body.message).toBe("Order not found");
@@ -392,7 +507,7 @@ describe("Order /api/order", () => {
 
       const response = await request(app)
         .get("/api/order/findId/1")
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(response.status).toBe(500);
       expect(response.body.message).toBe("Internal server error");

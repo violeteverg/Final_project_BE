@@ -55,7 +55,7 @@ describe("Review /api/review/:id", () => {
           comment: "Great product!",
           rating: 5,
         })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(201);
       expect(res.body.message).toBe("Review is created");
@@ -78,7 +78,7 @@ describe("Review /api/review/:id", () => {
           comment: "Great product!",
           rating: 5,
         })
-        .set("token", "Bearer token");
+        .set("_usertkn", "Bearer token");
 
       expect(res.status).toBe(500);
       expect(res.body.message).toBe("An error occurred");
