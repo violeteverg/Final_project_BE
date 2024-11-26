@@ -349,8 +349,66 @@ describe("Order /api/order", () => {
       };
       Order.findAll.mockResolvedValue(mockOrders);
       const res = await request(app)
-        .get("/api/order/admin/findAll")
+        .get("/api/order/admin/findAll?")
         .query({ page: 1, limit: 10 });
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual({
+        code: 200,
+        message: "Products retrieved successfully",
+        result: {
+          data: mockOrders,
+          pagination: mockPagination,
+        },
+      });
+    });
+    it("should return all order for admin with query params", async () => {
+      const mockOrders = [
+        {
+          id: 1,
+          userId: 18,
+          addressName: "jl.senang banget",
+          orderId: "TpLnts-YTZx1-wm85U",
+          orderDate: "2024-11-22T12:46:19.000Z",
+          orderStatus: "completed",
+          paymentId: "f2b28d92-9b29-4880-b1d3-ef32690fc8d3",
+          paymentStatus: "paid",
+          totalAmount: 120000,
+          vaNumber: [
+            {
+              bank: "bca",
+              va_number: "60991008001977877688922",
+            },
+          ],
+          createdAt: "2024-11-22T12:46:19.000Z",
+          updatedAt: "2024-11-22T12:46:28.000Z",
+          OrderItem: {
+            orderProduct: [
+              {
+                image:
+                  "https://res.cloudinary.com/dd2h1xakd/image/upload/v1730268990/product/wlwnzragcp5ro29epudm.png",
+                price: 120000,
+                quantity: 1,
+                productId: 7,
+                productName: "cactus",
+              },
+            ],
+          },
+          User: {
+            fullName: "udinx",
+          },
+        },
+      ];
+
+      const mockPagination = {
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 1,
+      };
+      Order.findAll.mockResolvedValue(mockOrders);
+      const res = await request(app).get(
+        "/api/order/admin/findAll?search=TPLNT"
+      );
 
       expect(res.statusCode).toBe(200);
       expect(res.body).toEqual({

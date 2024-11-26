@@ -235,6 +235,24 @@ describe("Cart /api/cart", () => {
       expect(res.status).toBe(200);
       expect(res.body).toHaveProperty("totalQuantity", 5);
     });
+    it("should return 200 with unkown quantity", async () => {
+      jwt.verify.mockReturnValue({
+        id: 1,
+      });
+      const mockCartItems = [
+        { Product: { quantity: 10 } },
+        { Product: { quantity: 5 } },
+      ];
+
+      Cart.findAll.mockResolvedValue(mockCartItems);
+
+      const res = await request(app)
+        .get("/api/cart/count")
+        .set("_usertkn", "Bearer token");
+
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("totalQuantity", 0);
+    });
 
     it("should return 200 with totalQuantity as 0 if the cart is empty", async () => {
       jwt.verify.mockReturnValue({
