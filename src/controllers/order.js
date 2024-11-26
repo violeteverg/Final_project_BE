@@ -271,7 +271,6 @@ const getProductByOrderDetailId = async (req, res) => {
       attributes: [
         "id",
         "categoryId",
-        "discountId",
         "image",
         "title",
         "description",

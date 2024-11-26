@@ -16,10 +16,6 @@ module.exports = {
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
       },
-      discountId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-      },
       image: {
         type: Sequelize.STRING,
         allowNull: false,

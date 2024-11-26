@@ -113,7 +113,7 @@ describe("PRODUCT /api/product", () => {
     //     jest.clearAllMocks();
     //   });
 
-    it("should return 200 and retrieve all products with pagination", async () => {
+    it("should return 200 and retrieve all products with pagination filtered by categoryName", async () => {
       const mockProducts = [
         {
           id: 1,
@@ -123,7 +123,7 @@ describe("PRODUCT /api/product", () => {
           price: 100,
           quantity: 10,
           isActive: true,
-          Category: { categoryName: "Category 1" },
+          Category: { categoryName: "Category1" },
         },
         {
           id: 2,
@@ -133,12 +133,61 @@ describe("PRODUCT /api/product", () => {
           price: 200,
           quantity: 5,
           isActive: true,
-          Category: { categoryName: "Category 2" },
+          Category: { categoryName: "Category2" },
+        },
+      ];
+
+      const categoryName = "Category1"; // Mock categoryName filter
+      const page = 1;
+      const limit = 1;
+
+      const mockPagination = {
+        data: mockProducts
+          .filter((product) => product.Category.categoryName === categoryName)
+          .slice(0, limit),
+        pagination: {
+          currentPage: page,
+          totalPages: Math.ceil(mockProducts.length / limit),
+          totalItems: mockProducts.length,
+        },
+      };
+
+      Product.findAll.mockResolvedValue(mockProducts);
+      paginate.mockImplementation(() => mockPagination);
+
+      const res = await request(app).get(
+        `/api/product/findAll?page=${page}&limit=${limit}&categoryName=${categoryName}`
+      );
+
+      expect(res.status).toBe(200);
+      expect(res.body.message).toBe("Products retrieved successfully");
+    });
+
+    it("should return 200 and retrieve all products when no categoryName is provided", async () => {
+      const mockProducts = [
+        {
+          id: 1,
+          image: "image1.jpg",
+          title: "Product 1",
+          description: "Description 1",
+          price: 100,
+          quantity: 10,
+          isActive: true,
+        },
+        {
+          id: 2,
+          image: "image2.jpg",
+          title: "Product 2",
+          description: "Description 2",
+          price: 200,
+          quantity: 5,
+          isActive: true,
         },
       ];
 
       const page = 1;
       const limit = 1;
+
       const mockPagination = {
         data: mockProducts.slice(0, limit),
         pagination: {
@@ -154,6 +203,48 @@ describe("PRODUCT /api/product", () => {
       const res = await request(app).get(
         `/api/product/findAll?page=${page}&limit=${limit}`
       );
+
+      expect(res.status).toBe(200);
+      expect(res.body.message).toBe("Products retrieved successfully");
+    });
+    it("should return 200 and retrieve all products with search", async () => {
+      const mockProducts = [
+        {
+          id: 1,
+          image: "image1.jpg",
+          title: "Product 1",
+          description: "Description 1",
+          price: 100,
+          quantity: 10,
+          isActive: true,
+        },
+        {
+          id: 2,
+          image: "image2.jpg",
+          title: "Product 2",
+          description: "Description 2",
+          price: 200,
+          quantity: 5,
+          isActive: true,
+        },
+      ];
+
+      const page = 1;
+      const limit = 1;
+
+      const mockPagination = {
+        data: mockProducts.slice(0, limit),
+        pagination: {
+          currentPage: page,
+          totalPages: Math.ceil(mockProducts.length / limit),
+          totalItems: mockProducts.length,
+        },
+      };
+
+      Product.findAll.mockResolvedValue(mockProducts);
+      paginate.mockImplementation(() => mockPagination);
+
+      const res = await request(app).get(`/api/product/findAll?search=cactus`);
 
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Products retrieved successfully");

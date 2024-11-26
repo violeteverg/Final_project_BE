@@ -11,7 +11,6 @@ module.exports = (sequelize, DataTypes) => {
       Product.belongsTo(models.Category, { foreignKey: "categoryId" });
       Product.hasMany(models.Review, { foreignKey: "productId" });
       Product.hasMany(models.Cart, { foreignKey: "productId" });
-      Product.hasMany(models.Wishlist, { foreignKey: "productId" });
     }
   }
   Product.init(
@@ -19,10 +18,6 @@ module.exports = (sequelize, DataTypes) => {
       categoryId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-      },
-      discountId: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
       },
       image: {
         type: DataTypes.STRING,
