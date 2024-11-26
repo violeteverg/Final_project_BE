@@ -3,7 +3,7 @@ const {
   Register,
   Login,
   adminLogin,
-  logout,
+  // logout,
   forgetPassword,
   resetPassword,
   loginWithGoogle,
@@ -18,7 +18,7 @@ userRouter.get("/verify-email", verifyEmail);
 userRouter.post("/login", Login);
 userRouter.post("/login-google", loginWithGoogle);
 userRouter.post("/admin-login", adminLogin);
-userRouter.post("/logout", logout);
+// userRouter.post("/logout", logout);
 userRouter.post("/forget-password", forgetPassword);
 userRouter.post("/reset-password", resetPassword);
 userRouter.post("/reset-verifyemail", resetVerifyEmail);

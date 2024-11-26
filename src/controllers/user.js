@@ -153,12 +153,6 @@ const loginWithGoogle = async (req, res) => {
     delete user.dataValues.password;
     user.dataValues["token"] = loginToken;
 
-    // return res.status(200).send({
-    //   code: 200,
-    //   message: "User successfully logged in!",
-    //   data: user,
-    // });
-    console.log(user, "ini user");
     return responseStatusMsg(
       res,
       200,
@@ -240,14 +234,14 @@ const adminLogin = async (req, res) => {
   }
 };
 
-const logout = async (req, res) => {
-  try {
-    res.clearCookie("token", { path: "/" });
-    return responseStatusMsg(res, 200, "cookie already remove", "success_data");
-  } catch (error) {
-    return responseStatusMsg(res, 500, error.message, "error", null, error);
-  }
-};
+// const logout = async (req, res) => {
+//   try {
+//     res.clearCookie("token", { path: "/" });
+//     return responseStatusMsg(res, 200, "cookie already remove", "success_data");
+//   } catch (error) {
+//     return responseStatusMsg(res, 500, error.message, "error", null, error);
+//   }
+// };
 
 const forgetPassword = async (req, res) => {
   try {
@@ -346,7 +340,7 @@ const resetPassword = async (req, res) => {
       { where: { email: decoded.userValue } }
     );
 
-    return res.json({ message: "Password reset successful!" });
+    return responseStatusMsg(res, 200, "Password reset successful!");
   } catch (error) {
     return responseStatusMsg(res, 500, error?.message, "error", null, error);
   }
@@ -357,7 +351,7 @@ module.exports = {
   Login,
   loginWithGoogle,
   adminLogin,
-  logout,
+  // logout,
   forgetPassword,
   resetPassword,
   resetVerifyEmail,
