@@ -59,18 +59,19 @@ const Login = async (req, res) => {
     const { input, password } = req.body;
 
     const { value, error } = loginSchema.validate({ input, password });
+    if (error) {
+      return responseStatusMsg(res, 400, '"input" is required', "error");
+    }
+
     const user = await User.findOne({
       attributes: ["id", "userName", "active", "email", "password", "isAdmin"],
       where: {
         [Op.or]: [{ email: value.input }, { userName: value.input }],
       },
     });
-    if (error) {
-      return res.status(400).send({
-        code: 400,
-        status: "failed",
-        message: error.details[0].message,
-      });
+
+    if (!user) {
+      return responseStatusMsg(res, 400, "User is not found", "error");
     }
 
     const loginToken = generateToken(
@@ -79,10 +80,6 @@ const Login = async (req, res) => {
       "LOGIN",
       "1d"
     );
-
-    if (!user) {
-      return responseStatusMsg(res, 400, "User is not found", "error");
-    }
 
     const isActive = user.active;
     if (!isActive) {

@@ -172,12 +172,7 @@ describe("User Controller Tests", () => {
       };
       const validationError = { details: [{ message: '"input" is required' }] };
       loginSchema.validate.mockReturnValue({ error: validationError });
-      const Login = async (req, res) => {
-        const { error } = loginSchema.validate(req.body);
-        if (error) {
-          return responseStatusMsg(res, 400, error.details[0].message, "error");
-        }
-      };
+
       await Login(req, res);
       expect(responseStatusMsg).toHaveBeenCalledWith(
         res,
@@ -190,16 +185,6 @@ describe("User Controller Tests", () => {
     it("should return 400 if user is not found", async () => {
       loginSchema.validate.mockReturnValue({ value: req.body, error: null });
       User.findOne.mockResolvedValue(null);
-      const Login = async (req, res) => {
-        const { error } = loginSchema.validate(req.body);
-        if (error) {
-          return responseStatusMsg(res, 400, error.details[0].message, "error");
-        }
-        const user = await User.findOne({ where: { email: req.body.input } });
-        if (!user) {
-          return responseStatusMsg(res, 400, "User is not found", "error");
-        }
-      };
       await Login(req, res);
       expect(responseStatusMsg).toHaveBeenCalledWith(
         res,
