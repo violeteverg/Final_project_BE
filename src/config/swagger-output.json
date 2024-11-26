@@ -1,0 +1,918 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "New Collection",
+    "version": "1.0.0",
+    "contact": {}
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/api/product/findAll": {
+      "get": {
+        "tags": [
+          "product"
+        ],
+        "summary": "get all product",
+        "description": "get all product",
+        "operationId": "getAllProduct",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "1"
+            }
+          },
+          {
+            "name": "categoryName",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "growing_media"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "example": "5"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/product/create": {
+      "post": {
+        "tags": [
+          "product"
+        ],
+        "summary": "create product",
+        "description": "create product",
+        "operationId": "createProduct",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "categoryId": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "ini adalah product"
+                  },
+                  "image": {
+                    "type": "string",
+                    "format": "binary"
+                  },
+                  "price": {
+                    "type": "string",
+                    "example": "120000"
+                  },
+                  "quantity": {
+                    "type": "string",
+                    "example": "12"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "test"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/product/update/6": {
+      "patch": {
+        "tags": [
+          "product"
+        ],
+        "summary": "update product",
+        "description": "update product",
+        "operationId": "updateProduct",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "cactyyus"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/product/delete/6": {
+      "patch": {
+        "tags": [
+          "product"
+        ],
+        "summary": "remove product (soft delete)",
+        "description": "remove product (soft delete)",
+        "operationId": "removeProductSoftDelete",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/product/review/9": {
+      "post": {
+        "tags": [
+          "product"
+        ],
+        "summary": "Review product",
+        "description": "Review product",
+        "operationId": "reviewProduct",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInVzZXJWYWx1ZSI6eyJlbWFpbCI6Im11aC5mYXV6YW4xMjQ1NzhAZ21haWwuY29tIiwidXNlck5hbWUiOiJ1ZGlucyJ9LCJuYW1lIjoiTE9HSU4iLCJpYXQiOjE3MzE5ODc2NzksImV4cCI6MTczMjA3NDA3OX0.DqMauC84ZblaWkR0vpR97fFYBZ3D7ErxT3SJvUTdWvY"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "comment": {
+                    "type": "string",
+                    "example": "ini barang baik"
+                  }
+                }
+              },
+              "examples": {
+                "Review product": {
+                  "value": {
+                    "comment": "ini barang baik"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/cart/findAll": {
+      "get": {
+        "tags": [
+          "cart"
+        ],
+        "summary": "get cart user",
+        "description": "get cart user",
+        "operationId": "getCartUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "get cart user": {
+                  "value": ""
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/cart/create": {
+      "post": {
+        "tags": [
+          "cart"
+        ],
+        "summary": "create cart user",
+        "description": "create cart user",
+        "operationId": "createCartUser",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInVzZXJWYWx1ZSI6eyJlbWFpbCI6Im11aC5mYXV6YW4xMjQ1NzhAZ21haWwuY29tIiwidXNlck5hbWUiOiJ1ZGlucyJ9LCJuYW1lIjoiTE9HSU4iLCJpYXQiOjE3MzE5ODc2NzksImV4cCI6MTczMjA3NDA3OX0.DqMauC84ZblaWkR0vpR97fFYBZ3D7ErxT3SJvUTdWvY"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "create cart user": {
+                  "value": "{\r\n    \"productId\": 3,\r\n \r\n}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/cart/update/1": {
+      "post": {
+        "tags": [
+          "cart"
+        ],
+        "summary": "New Request",
+        "description": "New Request",
+        "operationId": "newRequest",
+        "parameters": [
+          {
+            "name": "token",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTgsInVzZXJWYWx1ZSI6eyJlbWFpbCI6Im11aC5mYXV6YW4xMjQ1NzhAZ21haWwuY29tIiwidXNlck5hbWUiOiJ1ZGlucyJ9LCJuYW1lIjoiTE9HSU4iLCJpYXQiOjE3MzE5ODc2NzksImV4cCI6MTczMjA3NDA3OX0.DqMauC84ZblaWkR0vpR97fFYBZ3D7ErxT3SJvUTdWvY"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "quantity": {
+                    "type": "number",
+                    "example": 100
+                  }
+                }
+              },
+              "examples": {
+                "New Request": {
+                  "value": {
+                    "quantity": 100
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/cart/delete/5": {
+      "delete": {
+        "tags": [
+          "cart"
+        ],
+        "summary": "New Request",
+        "description": "New Request",
+        "operationId": "newRequest1",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/wishlist/create": {
+      "post": {
+        "tags": [
+          "wishlist"
+        ],
+        "summary": "create user wishlist",
+        "description": "create user wishlist",
+        "operationId": "createUserWishlist",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": {
+                    "type": "number",
+                    "example": 7
+                  }
+                }
+              },
+              "examples": {
+                "create user wishlist": {
+                  "value": {
+                    "productId": 7
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/wishlist/delete/5": {
+      "delete": {
+        "tags": [
+          "wishlist"
+        ],
+        "summary": "delete user wishlist",
+        "description": "delete user wishlist",
+        "operationId": "deleteUserWishlist",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/review/findAll": {
+      "get": {
+        "tags": [
+          "review"
+        ],
+        "summary": "get review",
+        "description": "get review",
+        "operationId": "getReview",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/address/create": {
+      "post": {
+        "tags": [
+          "address"
+        ],
+        "summary": "create user address",
+        "description": "create user address",
+        "operationId": "createUserAddress",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string",
+                    "example": "solo"
+                  },
+                  "country": {
+                    "type": "string",
+                    "example": "indonesia"
+                  },
+                  "fullAddress": {
+                    "type": "string",
+                    "example": "jl.senang banget "
+                  },
+                  "postalCode": {
+                    "type": "string",
+                    "example": "177088"
+                  },
+                  "state": {
+                    "type": "string",
+                    "example": "jawa tengah"
+                  }
+                }
+              },
+              "examples": {
+                "create user address": {
+                  "value": {
+                    "city": "solo",
+                    "country": "indonesia",
+                    "fullAddress": "jl.senang banget ",
+                    "postalCode": "177088",
+                    "state": "jawa tengah"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New Request",
+            "headers": {
+              "Access-Control-Allow-Credentials": {
+                "schema": {
+                  "type": "string",
+                  "example": "true"
+                }
+              },
+              "Connection": {
+                "schema": {
+                  "type": "string",
+                  "example": "keep-alive"
+                }
+              },
+              "Content-Length": {
+                "schema": {
+                  "type": "string",
+                  "example": "288"
+                }
+              },
+              "Date": {
+                "schema": {
+                  "type": "string",
+                  "example": "Tue, 19 Nov 2024 03:51:38 GMT"
+                }
+              },
+              "ETag": {
+                "schema": {
+                  "type": "string",
+                  "example": "W/\"120-PE4VmuxqlA9tGM73Woc+SoZqpA0\""
+                }
+              },
+              "Keep-Alive": {
+                "schema": {
+                  "type": "string",
+                  "example": "timeout=5"
+                }
+              },
+              "Vary": {
+                "schema": {
+                  "type": "string",
+                  "example": "Origin"
+                }
+              },
+              "X-Powered-By": {
+                "schema": {
+                  "type": "string",
+                  "example": "Express"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 201
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "address success create"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "city": {
+                          "type": "string",
+                          "example": "solo"
+                        },
+                        "country": {
+                          "type": "string",
+                          "example": "indonesia"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "example": "2024-11-19T03:51:38.458Z"
+                        },
+                        "fullAddress": {
+                          "type": "string",
+                          "example": "jl.senang banget "
+                        },
+                        "id": {
+                          "type": "number",
+                          "example": 23
+                        },
+                        "isPrimary": {
+                          "type": "boolean",
+                          "example": false
+                        },
+                        "postalCode": {
+                          "type": "string",
+                          "example": "177088"
+                        },
+                        "state": {
+                          "type": "string",
+                          "example": "jawa tengah"
+                        },
+                        "updatedAt": {
+                          "type": "string",
+                          "example": "2024-11-19T03:51:38.458Z"
+                        },
+                        "userId": {
+                          "type": "number",
+                          "example": 18
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "New Request": {
+                    "value": {
+                      "code": 201,
+                      "message": "address success create",
+                      "result": {
+                        "city": "solo",
+                        "country": "indonesia",
+                        "createdAt": "2024-11-19T03:51:38.458Z",
+                        "fullAddress": "jl.senang banget ",
+                        "id": 23,
+                        "isPrimary": false,
+                        "postalCode": "177088",
+                        "state": "jawa tengah",
+                        "updatedAt": "2024-11-19T03:51:38.458Z",
+                        "userId": 18
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/address/update/3": {
+      "patch": {
+        "tags": [
+          "address"
+        ],
+        "summary": "update address",
+        "description": "update address",
+        "operationId": "updateAddress",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "city": {
+                    "type": "string",
+                    "example": "bandung"
+                  },
+                  "fullAddress": {
+                    "type": "string",
+                    "example": "jl.bahagia"
+                  }
+                }
+              },
+              "examples": {
+                "update address": {
+                  "value": {
+                    "city": "bandung",
+                    "fullAddress": "jl.bahagia"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/address/delete/1": {
+      "delete": {
+        "tags": [
+          "address"
+        ],
+        "summary": "delete address",
+        "description": "delete address",
+        "operationId": "deleteAddress",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/order/transactions": {
+      "post": {
+        "tags": [
+          "order"
+        ],
+        "summary": "create order",
+        "description": "create order",
+        "operationId": "createOrder",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "totalAmount": {
+                    "type": "number",
+                    "example": 120000
+                  }
+                }
+              },
+              "examples": {
+                "create order": {
+                  "value": {
+                    "totalAmount": 120000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "basicAuth": []
+          }
+        ]
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Register User",
+        "description": "Register User",
+        "operationId": "registerUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "yejihwang5678@gmail.com"
+                  },
+                  "fullName": {
+                    "type": "string",
+                    "example": "udinas"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "123456789"
+                  },
+                  "userName": {
+                    "type": "string",
+                    "example": "udin"
+                  }
+                }
+              },
+              "examples": {
+                "Register User": {
+                  "value": {
+                    "email": "yejihwang5678@gmail.com",
+                    "fullName": "udinas",
+                    "password": "123456789",
+                    "userName": "udin"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login User",
+        "description": "Login User",
+        "operationId": "loginUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "string",
+                    "example": "udins"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Kyaru12*"
+                  }
+                }
+              },
+              "examples": {
+                "Login User": {
+                  "value": {
+                    "input": "udins",
+                    "password": "Kyaru12*"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/auth/admin-login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login Admin",
+        "description": "Login Admin",
+        "operationId": "loginAdmin",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "string",
+                    "example": "udins"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "Gyaru12*"
+                  }
+                }
+              },
+              "examples": {
+                "Login Admin": {
+                  "value": {
+                    "input": "udins",
+                    "password": "Gyaru12*"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/auth/reset-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Reset Password",
+        "description": "Reset Password",
+        "operationId": "resetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "newPassword": {
+                    "type": "string",
+                    "example": "Jest1234*"
+                  }
+                }
+              },
+              "examples": {
+                "Reset Password": {
+                  "value": {
+                    "newPassword": "Jest1234*"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/api/auth/forget-password": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "forget Password",
+        "description": "forget Password",
+        "operationId": "forgetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "muh.fauzan124578@gmail.com"
+                  }
+                }
+              },
+              "examples": {
+                "forget Password": {
+                  "value": {
+                    "email": "muh.fauzan124578@gmail.com"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "basicAuth": {
+        "type": "http",
+        "scheme": "basic"
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "product"
+    },
+    {
+      "name": "cart"
+    },
+    {
+      "name": "wishlist"
+    },
+    {
+      "name": "review"
+    },
+    {
+      "name": "address"
+    },
+    {
+      "name": "order"
+    },
+    {
+      "name": "auth"
+    }
+  ]
+}

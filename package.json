@@ -5,6 +5,7 @@
   "scripts": {
     "start": "npm run serve",
     "dev": "concurrently  \"npm run serve:watch\"",
+    "start:swagger": "node ./src/utils/postman2openapi",
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles",
     "test:coverage": "cross-env NODE_ENV=test jest  --coverage",
     "serve": "node index.js",
@@ -40,8 +41,10 @@
     "mysql2": "^3.11.4",
     "nodemailer": "^6.9.15",
     "nodemon": "^3.1.7",
+    "postman2openapi": "^1.2.1",
     "sequelize": "^6.37.4",
-    "supertest": "^7.0.0"
+    "supertest": "^7.0.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "sequelize-cli": "^6.6.2"
