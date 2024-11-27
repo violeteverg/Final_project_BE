@@ -17,13 +17,9 @@ const createTransaction = async (transactionDetails) => {
         },
       }
     );
-    console.log(transaction.data, "ini create Transaction");
+
     return transaction.data;
   } catch (error) {
-    console.error(
-      "Midtrans Error:",
-      error.response ? error.response.data : error.message
-    );
     throw new Error(error);
   }
 };

@@ -6,7 +6,7 @@ const {
 const generateRandomString = require("../utils/generateRandomString");
 const { Order, OrderItem, Product, User } = require("../models");
 const verifySignatureKey = require("../utils/verifySignatureKey");
-const updateOrderStatus = require("../services/updateOrder");
+const { updateOrderStatus } = require("../services/updateOrder");
 const { Op } = require("sequelize");
 const responseStatusMsg = require("../helper/responseMessage");
 const paginate = require("../utils/pagination");

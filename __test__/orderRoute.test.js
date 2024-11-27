@@ -5,7 +5,7 @@ const {
   cancelTransaction,
 } = require("../src/services/midtransService");
 const verifySignatureKey = require("../src/utils/verifySignatureKey");
-const updateOrderStatus = require("../src/services/updateOrder");
+const { updateOrderStatus } = require("../src/services/updateOrder");
 
 const { Order, OrderItem, Product, User } = require("../src/models");
 const app = require("../index");
@@ -31,7 +31,9 @@ jest.mock("../src/models", () => ({
 }));
 jest.mock("../src/utils/verifySignatureKey", () => jest.fn());
 
-jest.mock("../src/services/updateOrder", () => jest.fn());
+jest.mock("../src/services/updateOrder", () => ({
+  updateOrderStatus: jest.fn(),
+}));
 
 jest.mock("../src/services/midtransService", () => ({
   createTransaction: jest.fn(),

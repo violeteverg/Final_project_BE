@@ -88,4 +88,4 @@ const updateOrderStatus = async (orderId, transactionStatus, vaNumbers) => {
   }
 };
 
-module.exports = updateOrderStatus;
+module.exports = { updateOrderStatus, getOrderStatus };

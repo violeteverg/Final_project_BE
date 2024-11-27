@@ -43,7 +43,23 @@ describe("services/midtrans", () => {
       );
       expect(result).toEqual(mockResponse.data);
     });
+
+    it("should throw an error when the API call fails", async () => {
+      const mockError = {
+        response: {
+          data: { message: "Transaction failed" },
+        },
+      };
+      axios.post.mockRejectedValue(mockError);
+
+      try {
+        await createTransaction(transactionDetails);
+      } catch (error) {
+        expect(error).toBe(error);
+      }
+    });
   });
+
   describe("verifyTransaction", () => {
     const orderId = "order-123";
 
@@ -72,6 +88,29 @@ describe("services/midtrans", () => {
         }
       );
       expect(result).toEqual(mockResponse.data);
+    });
+
+    it("should log an error and return undefined when the API call fails", async () => {
+      const mockError = {
+        response: {
+          data: { message: "Transaction not found" },
+        },
+      };
+      axios.get.mockRejectedValue(mockError);
+
+      // Mock console.error
+      console.error = jest.fn();
+
+      const result = await verifyTransaction(orderId);
+
+      // Check if console.error was called with the correct arguments
+      expect(console.error).toHaveBeenCalledWith(
+        mockError,
+        "ini error verify transaction"
+      );
+
+      // Check the result is undefined when the API call fails
+      expect(result).toBeUndefined();
     });
   });
 
@@ -102,6 +141,29 @@ describe("services/midtrans", () => {
         }
       );
       expect(result).toEqual(mockResponse.data);
+    });
+
+    it("should log an error and return undefined when the cancel API call fails", async () => {
+      const mockError = {
+        response: {
+          data: { message: "Transaction not found" },
+        },
+      };
+      axios.get.mockRejectedValue(mockError);
+
+      // Mock console.error
+      console.error = jest.fn();
+
+      const result = await cancelTransaction(orderId);
+
+      // Check if console.error was called with the correct arguments
+      expect(console.error).toHaveBeenCalledWith(
+        mockError,
+        "ini error cancel transaction"
+      );
+
+      // Check the result is undefined when the API call fails
+      expect(result).toBeUndefined();
     });
   });
 });
