@@ -49,7 +49,7 @@ const createProduct = async (req, res) => {
 
 const findAllProduct = async (req, res) => {
   try {
-    const { search, categoryName, page = 1, limit = 10 } = req.query;
+    const { search, review, categoryName, page = 1, limit = 10 } = req.query;
     const whereCondition = {
       ...(search && {
         [Op.or]: [
@@ -58,6 +58,10 @@ const findAllProduct = async (req, res) => {
         ],
       }),
     };
+
+    const orderCondition = review
+      ? [[{ model: Review }, "rating", review.toUpperCase()]]
+      : [["id", "ASC"]];
 
     const products = await Product.findAll({
       where: whereCondition,
@@ -77,8 +81,12 @@ const findAllProduct = async (req, res) => {
           required: !!categoryName,
           attributes: ["categoryName"],
         },
+        {
+          model: Review,
+          attributes: ["id", "rating", "comment"],
+        },
       ],
-      order: [["id", "ASC"]],
+      order: orderCondition,
     });
     const { data, pagination } = paginate(products, +page, +limit);
 
