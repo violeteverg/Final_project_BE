@@ -33,6 +33,28 @@ const updateProductQuantities = async (orderProducts) => {
   }
 };
 
+const checkingProductQuantity = async (orderId, orderProducts, res) => {
+  for (const item of orderProducts) {
+    const product = await Product.findOne({ where: { id: item.productId } });
+    if (!product || product.quantity < item.quantity) {
+      await Order.update(
+        {
+          orderStatus: "rejected",
+          paymentStatus: "refund",
+        },
+        {
+          where: { orderId },
+        }
+      );
+      return {
+        success: false,
+        message: `${product?.title || "Product"} quantity is not in stock`,
+      };
+    }
+  }
+  return { success: true };
+};
+
 const removeProductsFromCart = async (userId, orderProducts) => {
   for (const item of orderProducts) {
     const { productId } = item;
@@ -67,6 +89,13 @@ const updateOrderStatus = async (orderId, transactionStatus, vaNumbers) => {
       vaNumber: vaNumbers,
     });
 
+    const checkResult = await checkingProductQuantity(
+      orderId,
+      order.OrderItem.orderProduct
+    );
+
+    if (!checkResult.success) return checkResult;
+
     if (orderStatus === "completed" && order.OrderItem.isBuyNow === false) {
       await removeProductsFromCart(order.userId, order.OrderItem.orderProduct);
     }
@@ -87,5 +116,4 @@ const updateOrderStatus = async (orderId, transactionStatus, vaNumbers) => {
     };
   }
 };
-
 module.exports = { updateOrderStatus, getOrderStatus };

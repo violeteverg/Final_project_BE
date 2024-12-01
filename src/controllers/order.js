@@ -18,6 +18,31 @@ const isProduction =
 const createOrder = async (req, res) => {
   try {
     const { totalAmount, orderItems, addressName, isBuyNow } = req.body;
+    console.log(orderItems, "ini order items----");
+
+    for (const item of orderItems) {
+      const product = await Product.findOne({
+        where: { id: item.productId },
+      });
+
+      if (!product) {
+        return responseStatusMsg(
+          res,
+          404,
+          `Product with ID ${item.productId} not found`,
+          "error"
+        );
+      }
+
+      if (product.quantity < item.quantity) {
+        return responseStatusMsg(
+          res,
+          400,
+          ` ${product.title} quantity is not already in stock`,
+          "error"
+        );
+      }
+    }
 
     console.log(orderItems, "ini order items");
     const userId = req.body.userId;

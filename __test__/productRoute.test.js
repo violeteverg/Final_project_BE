@@ -249,6 +249,48 @@ describe("PRODUCT /api/product", () => {
       expect(res.status).toBe(200);
       expect(res.body.message).toBe("Products retrieved successfully");
     });
+    it("should return 200 and retrieve all products with review product", async () => {
+      const mockProducts = [
+        {
+          id: 1,
+          image: "image1.jpg",
+          title: "Product 1",
+          description: "Description 1",
+          price: 100,
+          quantity: 10,
+          isActive: true,
+        },
+        {
+          id: 2,
+          image: "image2.jpg",
+          title: "Product 2",
+          description: "Description 2",
+          price: 200,
+          quantity: 5,
+          isActive: true,
+        },
+      ];
+
+      const page = 1;
+      const limit = 1;
+
+      const mockPagination = {
+        data: mockProducts.slice(0, limit),
+        pagination: {
+          currentPage: page,
+          totalPages: Math.ceil(mockProducts.length / limit),
+          totalItems: mockProducts.length,
+        },
+      };
+
+      Product.findAll.mockResolvedValue(mockProducts);
+      paginate.mockImplementation(() => mockPagination);
+
+      const res = await request(app).get(`/api/product/findAll?review="DESC"`);
+
+      expect(res.status).toBe(200);
+      expect(res.body.message).toBe("Products retrieved successfully");
+    });
 
     it("should return 500 if an error occurs while retrieving products", async () => {
       Product.findAll.mockRejectedValue(new Error("Database error"));
@@ -315,6 +357,57 @@ describe("PRODUCT /api/product", () => {
     });
   });
   describe("PATCH /api/product/update/:id", () => {
+    it("should use default values when title and price are not provided in req.body", async () => {
+      const mockProduct = {
+        id: 1,
+        title: "Original Product",
+        price: 100,
+        quantity: 10,
+        categoryId: 2,
+        description: "Original Description",
+        image: "original_image.jpg",
+      };
+
+      const updatedFields = {
+        quantity: 15,
+        description: "Updated Description",
+      };
+
+      Product.findOne.mockResolvedValue(mockProduct);
+      Product.update.mockResolvedValue([1]);
+
+      const res = await request(app)
+        .patch("/api/product/update/1")
+        .send(updatedFields);
+
+      expect(res.status).toBe(200);
+    });
+
+    it("should update title and price when provided in req.body", async () => {
+      const mockProduct = {
+        id: 1,
+        title: "Original Product",
+        price: 100,
+        quantity: 10,
+        categoryId: 2,
+        description: "Original Description",
+        image: "original_image.jpg",
+      };
+
+      const updatedFields = {
+        title: "New Title",
+        price: 150,
+      };
+
+      Product.findOne.mockResolvedValue(mockProduct);
+      Product.update.mockResolvedValue([1]);
+
+      const res = await request(app)
+        .patch("/api/product/update/1")
+        .send(updatedFields);
+
+      expect(res.status).toBe(200);
+    });
     it("should return 200 and update the product when the product is found", async () => {
       const mockProduct = {
         id: 1,
